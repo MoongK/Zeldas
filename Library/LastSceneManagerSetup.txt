@@ -1,0 +1,4 @@
+sceneSetups:
+- path: C:/Users/DGA_PROG_01/Desktop/Mong/U-NP(2018)/Day24 - UI_Anchor/Assets/Anchor.unity
+  isLoaded: 1
+  isActive: 1
