@@ -249,6 +249,7 @@ GameObject:
   m_Component:
   - component: {fileID: 518398407}
   - component: {fileID: 518398408}
+  - component: {fileID: 518398409}
   m_Layer: 5
   m_Name: HeartMgr
   m_TagString: Untagged
@@ -288,24 +289,21 @@ MonoBehaviour:
   heart: {fileID: 1072960294447906, guid: 3bd0c9bb1792e28439e6792a2265a367, type: 2}
   totalHp: 0
   HeartField: {fileID: 1511311775}
+  isStarted: 0
   damage: 10
   heal: 5
---- !u!1 &737866937 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 1179621130447870, guid: 3bd0c9bb1792e28439e6792a2265a367,
-    type: 2}
-  m_PrefabInternal: {fileID: 1321058979}
---- !u!114 &737866938
+--- !u!114 &518398409
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 737866937}
+  m_GameObject: {fileID: 518398406}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5dbce679bd0ef4d438fb20ced7198e80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HeartField: {fileID: 1511311775}
 --- !u!1 &1087136007
 GameObject:
   m_ObjectHideFlags: 0
@@ -578,6 +576,21 @@ Prefab:
     - target: {fileID: 224011626996509488, guid: 3bd0c9bb1792e28439e6792a2265a367,
         type: 2}
       propertyPath: m_Pivot.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114825254109680870, guid: 3bd0c9bb1792e28439e6792a2265a367,
+        type: 2}
+      propertyPath: m_FillOrigin
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114825254109680870, guid: 3bd0c9bb1792e28439e6792a2265a367,
+        type: 2}
+      propertyPath: m_FillAmount
+      value: 0.251
+      objectReference: {fileID: 0}
+    - target: {fileID: 114825254109680870, guid: 3bd0c9bb1792e28439e6792a2265a367,
+        type: 2}
+      propertyPath: m_FillClockwise
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

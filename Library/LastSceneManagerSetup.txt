@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/AZeldas/AZeldas.unity
+- path: Assets/Zeldas.unity
   isLoaded: 1
   isActive: 1

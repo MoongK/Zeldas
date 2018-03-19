@@ -9,7 +9,7 @@ public class HeartMgr : MonoBehaviour {
     public Object heart;
     public int totalHp;
     public RectTransform HeartField;
-    bool isStarted = false;
+    public bool isStarted = false;
     // ======================
 
     public int damage = 1;
@@ -55,6 +55,7 @@ public class HeartMgr : MonoBehaviour {
                     aliveHeart++;
             }
         }
+
         for (int i = aliveHeart - 1; i >= 0; i--)
         {
             {
