@@ -5,21 +5,25 @@ using UnityEngine.UI;
 
 public class HeartMgr : MonoBehaviour {
 
-    // Start Setting ==========
+    // Start Setting =========
     public Object heart;
     public int totalHp;
     public RectTransform HeartField;
     public bool isStarted = false;
     // ======================
 
-    public int damage = 1;
-    public int heal = 5;
+    public int damage;
+    public int heal;
     float currentHp;
 
-	void Start ()
+    float dist;
+
+	void Awake ()
     {
         totalHp = 32;
         currentHp = totalHp;
+        damage = 7;
+        heal = 5;
 	}
 	
 	void Update ()
@@ -47,27 +51,29 @@ public class HeartMgr : MonoBehaviour {
         if (currentHp == 0f)
             return;
 
-        for(int i = 0; i< HeartField.childCount; i++)
+        foreach(Transform ob in HeartField)
         {
-            foreach(Transform ob in HeartField.GetChild(i))
-            {
-                if (ob.GetComponent<Image>().fillAmount != 0f)
-                    aliveHeart++;
-            }
+            GameObject red = ob.Find("Gauge").gameObject;
+            if (red.GetComponent<Image>().fillAmount != 0f)
+                aliveHeart++;
         }
+
+        print("aliveHeart : " + aliveHeart);
 
         for (int i = aliveHeart - 1; i >= 0; i--)
         {
+            while (HeartField.GetChild(i).Find("Gauge").GetComponent<Image>().fillAmount > 0f)
             {
-                while (HeartField.GetChild(i).Find("Gauge").GetComponent<Image>().fillAmount > 0f)
+                if (damageCounter == _damage)
+                    break;
+                else
                 {
-                    if (damageCounter == _damage)
-                        break;
-                    else
-                    {
-                        HeartField.GetChild(i).Find("Gauge").GetComponent<Image>().fillAmount -= 0.25f;
-                        damageCounter++;
-                    }
+                    HeartField.GetChild(i).Find("Gauge").GetComponent<Image>().fillAmount -= 0.25f;
+                    damageDirectionCheck(HeartField.GetChild(i).Find("Gauge").GetComponent<Image>().fillAmount, i);
+                    HeartField.GetChild(i).Find("Shine").GetComponent<Image>().fillClockwise = false;
+                    HeartField.GetChild(i).Find("Shine").GetComponent<Image>().fillAmount += 0.25f;
+                    StartCoroutine(shiner(HeartField.GetChild(i).Find("Shine").gameObject));
+                    damageCounter++;
                 }
             }
         }
@@ -80,7 +86,7 @@ public class HeartMgr : MonoBehaviour {
     {
         int healCounter = 0;
         int lastIndex = 0;
-        GameObject lastHeart;
+        GameObject lastHeart, lastHeartWhite;
 
         if (currentHp == totalHp)
             return;
@@ -96,6 +102,7 @@ public class HeartMgr : MonoBehaviour {
         while (lastIndex < HeartField.childCount)
         {
             lastHeart = HeartField.GetChild(lastIndex).Find("Gauge").gameObject;
+            lastHeartWhite = HeartField.GetChild(lastIndex).Find("Shine").gameObject;
 
             while (lastHeart.GetComponent<Image>().fillAmount < 1f)
             {
@@ -103,7 +110,11 @@ public class HeartMgr : MonoBehaviour {
                     break;
                 else
                 {
+                    healDirectionCheck(lastHeart.GetComponent<Image>().fillAmount, lastIndex);
+                    lastHeartWhite.GetComponent<Image>().fillClockwise = true;
                     lastHeart.GetComponent<Image>().fillAmount += 0.25f;
+                    lastHeartWhite.GetComponent<Image>().fillAmount += 0.25f;
+                    StartCoroutine(shiner(lastHeartWhite));
                     healCounter++;
                 }
             }
@@ -114,9 +125,31 @@ public class HeartMgr : MonoBehaviour {
         print("currentHp : " + currentHp);
     }
 
+    private void damageDirectionCheck(float redFillAmount, int i)
+    {
+        if (redFillAmount == 0f)
+            HeartField.GetChild(i).Find("Shine").GetComponent<Image>().fillOrigin = 2;
+        else if (redFillAmount == 0.25f)
+            HeartField.GetChild(i).Find("Shine").GetComponent<Image>().fillOrigin = 3;
+        else if (redFillAmount == 0.5f)
+            HeartField.GetChild(i).Find("Shine").GetComponent<Image>().fillOrigin = 0;
+        else if (redFillAmount == 0.75f)
+            HeartField.GetChild(i).Find("Shine").GetComponent<Image>().fillOrigin = 1;
+            
+    }
 
+    private void healDirectionCheck(float redFillAmount, int i)
+    {
+        if (redFillAmount == 0f)
+            HeartField.GetChild(i).Find("Shine").GetComponent<Image>().fillOrigin = 3;
+        else if (redFillAmount == 0.25f)
+            HeartField.GetChild(i).Find("Shine").GetComponent<Image>().fillOrigin = 0;
+        else if (redFillAmount == 0.5f)
+            HeartField.GetChild(i).Find("Shine").GetComponent<Image>().fillOrigin = 1;
+        else if (redFillAmount == 0.75f)
+            HeartField.GetChild(i).Find("Shine").GetComponent<Image>().fillOrigin = 2;
 
-
+    }
 
     IEnumerator MakeHeart(int myheartgauge)
     {
@@ -135,7 +168,7 @@ public class HeartMgr : MonoBehaviour {
 
         for (int i = 0; i < maxHp; i++)
         {
-            h = Instantiate(heart, HeartField) as GameObject;
+            h = (GameObject)Instantiate(heart, HeartField);
             h.transform.localPosition = new Vector3(i * 70f, 0f, 0f);
             myHearts.Add(h);
             yield return null;
@@ -157,5 +190,19 @@ public class HeartMgr : MonoBehaviour {
             yield return null;
         }
         isStarted = true;
+    }
+
+    IEnumerator shiner(GameObject _white)
+    {
+        dist = 1 - 0.1f;
+
+        yield return new WaitForSeconds(0.2f);
+        while (_white.GetComponent<Image>().fillAmount != 0f)
+        {
+            _white.GetComponent<Image>().fillAmount = Mathf.Lerp(_white.GetComponent<Image>().fillAmount, 0f, 1 / dist * 0.1f);
+            dist = (1 - 0.1f) * dist;
+            yield return new WaitForSeconds(0.02f);
+        }
+
     }
 }
